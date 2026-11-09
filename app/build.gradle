@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
-
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "25.0.0" // <-- یہاں 23.0.2 کی جگہ 25.0.0 کر دیا ہے
 
     dexOptions {
         incremental true
@@ -42,7 +41,8 @@ android {
 
     task ndkBuild(type: Exec) {
         def ndkDir = android.ndkDirectory
-        commandLine "$ndkDir/ndk-build.cmd", '-C', file('src/main').absolutePath
+        // یہاں سے .cmd ہٹا دیا ہے تاکہ Linux پر چل سکے
+        commandLine "$ndkDir/ndk-build", '-C', file('src/main').absolutePath 
     }
 
     tasks.withType(JavaCompile) {
@@ -61,5 +61,4 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.rmtheis:tess-two:5.4.1'
     compile 'io.card:android-sdk:5.3.4'
-
 }
