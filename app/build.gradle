@@ -3,7 +3,10 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "25.0.0" // ورژن 23.0.2 کو تبدیل کر دیا گیا ہے
+    buildToolsVersion "25.0.0"
+    
+    // 👇 یہ لائن سب سے اہم ہے، یہ بلڈ کو پرانا NDK استعمال کرنے پر مجبور کرے گی
+    ndkVersion "16.1.4479499" 
 
     dexOptions {
         incremental true
@@ -32,6 +35,7 @@ android {
                     jniLibs.srcDir 'src/main/libs'
                 }
     }
+    
     buildTypes {
         release {
             minifyEnabled false
@@ -41,7 +45,7 @@ android {
 
     task ndkBuild(type: Exec) {
         def ndkDir = android.ndkDirectory
-        // ونڈوز کے .cmd کو ہٹا کر لینکس کمانڈ اور V=1 (مکمل تفصیل) شامل کی گئی ہے
+        // V=1 کا مطلب ہے کہ مکمل تفصیل لاگ میں دکھائی جائے اگر کوئی ایرر آئے تو
         commandLine "$ndkDir/ndk-build", '-C', file('src/main').absolutePath, 'V=1'
     }
 
