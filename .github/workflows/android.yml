@@ -18,7 +18,7 @@ jobs:
         with:
           packages: 'platform-tools'
 
-      # AAPT کو چلانے کے لیے 32-bit لائبریریاں
+      # aapt کی 32-bit لائبریریوں کی تنصیب
       - name: Install 32-bit libraries
         run: |
           sudo apt-get update
