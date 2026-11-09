@@ -4,9 +4,6 @@ apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 23
     buildToolsVersion "25.0.0"
-    
-    // 👇 یہ لائن سب سے اہم ہے، یہ بلڈ کو پرانا NDK استعمال کرنے پر مجبور کرے گی
-    ndkVersion "16.1.4479499" 
 
     dexOptions {
         incremental true
@@ -29,13 +26,12 @@ android {
             moduleName "ImageProcessing"
         }
 
-        sourceSets.main
-                {
-                    jni.srcDirs = []
-                    jniLibs.srcDir 'src/main/libs'
-                }
+        sourceSets.main {
+            jni.srcDirs = []
+            jniLibs.srcDir 'src/main/libs'
+        }
     }
-    
+
     buildTypes {
         release {
             minifyEnabled false
@@ -45,7 +41,6 @@ android {
 
     task ndkBuild(type: Exec) {
         def ndkDir = android.ndkDirectory
-        // V=1 کا مطلب ہے کہ مکمل تفصیل لاگ میں دکھائی جائے اگر کوئی ایرر آئے تو
         commandLine "$ndkDir/ndk-build", '-C', file('src/main').absolutePath, 'V=1'
     }
 
