@@ -64,6 +64,9 @@ jobs:
           distribution: temurin
           java-version: '8'
 
+      - name: Remove stale NDK intermediates
+        run: rm -rf app/src/main/obj
+
       - name: Build APK
         env:
           SLAVE_AAPT_TIMEOUT: 30
