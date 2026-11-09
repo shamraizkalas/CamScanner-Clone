@@ -14,38 +14,49 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
-      # 1. aapt کی 32-bit لائبریریوں کی تنصیب
-      - name: Install 32-bit libraries for aapt
+      # AAPT کو چلانے کے لیے 32-bit لائبریریاں
+      - name: Install 32-bit libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y lib32z1 lib32stdc++6
 
-      # 2. sdkmanager کے لیے Java 17
+      # sdkmanager کے لیے Java 17
       - name: Setup Java 17 for sdkmanager
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      # 3. build-tools کا نیا ورژن (23.0.2 کے بجائے 25.0.0 یا اس سے نیا)
-      - name: Install Android SDK packages
+      # SDK پیکجز اور پرانا NDK (ورژن 16) انسٹال کرنا
+      - name: Install Android SDK packages and NDK
         env:
           SKIP_JDK_VERSION_CHECK: true
         run: |
-          sdkmanager --install "platforms;android-23" "build-tools;25.0.0"
+          sdkmanager --install "platforms;android-23" "build-tools;25.0.0" "ndk;16.1.4479499"
 
-      # 4. APK بلڈ کے لیے Java 8
+      # بلڈ کے لیے Java 8 پر واپس جانا
       - name: Switch to Java 8
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '8'
 
+      # APK بلڈ کرنا
       - name: Build APK
         env:
           SLAVE_AAPT_TIMEOUT: 30
         run: |
           chmod +x gradlew
           ./gradlew clean assembleDebug --stacktrace
+
+      # APK اپلوڈ کرنا
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CamScanner-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
